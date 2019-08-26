@@ -1,6 +1,7 @@
 import React from "react"
 import { distance } from "../helpers"
 import axios from "axios"
+import _ from "lodash"
 
 export default class Home extends React.Component {
   componentDidMount() {
@@ -912,9 +913,11 @@ export default class Home extends React.Component {
       )
     }))
 
-    let myLocations = locations.filter(item => item.distance < radius)
+    const myLocations = locations.filter(item => item.distance < radius)
 
-    console.log(myLocations)
+    const orderedMyLocations = _.orderBy(myLocations, ["distance"], ["asc"])
+
+    console.log("o: ", orderedMyLocations)
   }
 
   render() {
