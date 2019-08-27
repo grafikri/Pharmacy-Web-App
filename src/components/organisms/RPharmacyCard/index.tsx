@@ -14,7 +14,6 @@ class RPharmacyCard extends React.Component<StyleProps> {
   componentDidMount() {}
 
   render() {
-    console.log("c: ")
     return <div className={this.props.classes.root}>Card</div>
   }
 }
