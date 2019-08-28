@@ -3,7 +3,6 @@ import logo from "./logo.svg"
 //import "./App.css"
 import Home from "./components/Home"
 import { Theme, createMuiTheme } from "@material-ui/core"
-import RPharmacyCard from "./components/organisms/RPharmacyCard"
 
 import { ThemeProvider } from "@material-ui/styles"
 
@@ -15,9 +14,15 @@ const theme = createMuiTheme({
 
 const App: React.FC = () => {
   return (
-    <div className="App">
+    <div
+      className="App"
+      style={{
+        background: theme.palette.background.default,
+        minHeight: "100vh"
+      }}
+    >
       <ThemeProvider theme={theme}>
-        <RPharmacyCard />
+        <Home />
       </ThemeProvider>
     </div>
   )

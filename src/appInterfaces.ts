@@ -1,16 +1,18 @@
 /**
  * Provides basic pharmacie information
  */
-export interface Pharmacie {
+export interface Pharmacy {
   name: string
+  address?: string
   location?: Coordinate
-  desc?: string
+  distance?: string
+  phone?: string
 }
 
 /**
  * Standard coordinates info
  */
 export interface Coordinate {
-  lat: number
-  long: number
+  lat?: number
+  long?: number
 }

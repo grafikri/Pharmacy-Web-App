@@ -2,8 +2,32 @@ import React from "react"
 import { distance } from "../helpers"
 import axios from "axios"
 import _ from "lodash"
+import { Theme, WithStyles, withStyles, createStyles } from "@material-ui/core"
+import RPharmacyCard from "../components/organisms/RPharmacyCard"
+import { Pharmacy, Coordinate } from "../appInterfaces"
+import { maxWidth } from "@material-ui/system"
 
-export default class Home extends React.Component {
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      maxWidth: 400,
+      paddingTop: theme.spacing(1),
+      paddingBottom: theme.spacing(1),
+      margin: "auto"
+    },
+    listItem: {
+      marginTop: theme.spacing(1),
+      marginBottom: theme.spacing(1)
+    }
+  })
+
+export interface StyleProps extends WithStyles<typeof styles> {}
+
+class Home extends React.Component<StyleProps, { list: Pharmacy[] }> {
+  state = {
+    list: []
+  }
+
   componentDidMount() {
     const datas = {
       data: [
@@ -877,50 +901,68 @@ export default class Home extends React.Component {
       tomorrow: "27-08-2019"
     }
 
-    const pharmacies = datas.data.map(item => {
-      const location =
+    const pharmacies: Pharmacy[] = datas.data.map(item => {
+      const location: Coordinate =
         item.konum == null
-          ? []
-          : [+item.konum.split(",")[0], +item.konum!.split(",")[1]]
+          ? {}
+          : { lat: +item.konum.split(",")[0], long: +item.konum!.split(",")[1] }
       return {
         name: item.eczane_adi,
-        location
+        location,
+        address: item.eczane_ilce + " - " + item.eczane_adres,
+        phone: item.phone
       }
     })
 
-    let stores = [
-      {
-        name: "Eczane Ay",
-        location: [40.226814, 28.92054]
-      },
-      {
-        name: "Sağlık birimleri",
-        location: [40.231624, 28.980228]
-      }
-    ]
-
-    stores = pharmacies
-
-    let radius = 5
-    let locations = stores.map(item => ({
+    let radius = 60
+    let locations = pharmacies.map(item => ({
       ...item,
       distance: distance(
         40.240659,
         29.008405,
-        item.location[0],
-        item.location[1],
+        item.location == null ? 0 : item.location.lat!,
+        item.location == null ? 0 : item.location.long!,
         "K"
       )
     }))
 
     const myLocations = locations.filter(item => item.distance < radius)
-
     const orderedMyLocations = _.orderBy(myLocations, ["distance"], ["asc"])
 
-    console.log("o: ", orderedMyLocations)
+    const myLocationsWithDistance: Pharmacy[] = orderedMyLocations.map(
+      item => ({
+        ...item,
+        distance: item.distance
+          .toString()
+          .substr(0, 4)
+          .concat(" km")
+      })
+    )
+
+    console.log("p: ", orderedMyLocations)
+
+    this.setState({
+      list: myLocationsWithDistance
+    })
   }
 
   render() {
-    return <div>Home</div>
+    return (
+      <div className={this.props.classes.root}>
+        {this.state.list.map((item: Pharmacy, index) => (
+          <div key={index} className={this.props.classes.listItem}>
+            <RPharmacyCard
+              key={index}
+              name={item.name}
+              phone={item.phone}
+              address={item.address}
+              distance={item.distance}
+            />
+          </div>
+        ))}
+      </div>
+    )
   }
 }
+
+export default withStyles(styles)(Home)

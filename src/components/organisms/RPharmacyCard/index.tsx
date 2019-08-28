@@ -1,46 +1,103 @@
 import React from "react"
+import clsx from "clsx"
 import {
   Card,
   CardContent,
   Typography,
   CardActions,
-  Button
+  Button,
+  CardHeader,
+  Avatar
 } from "@material-ui/core"
 import { Theme, WithStyles, withStyles, createStyles } from "@material-ui/core"
+import { Phone, LocationOn } from "@material-ui/icons"
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {
-      color: "red",
-      margin: theme.spacing()
+    leftIcon: {
+      marginRight: theme.spacing(1)
+    },
+    iconSmall: {
+      fontSize: 20
+    },
+    actions: {
+      display: "flex",
+      alignItems: "center"
+    },
+    distance: {
+      fontSize: 14,
+      marginTop: theme.spacing(0.8)
     }
   })
 
 export interface StyleProps extends WithStyles<typeof styles> {}
 
-class RPharmacyCard extends React.Component<StyleProps> {
+class RPharmacyCard extends React.Component<
+  StyleProps & {
+    name: string
+    address?: string
+    phone?: string
+    distance?: string
+  }
+> {
   componentDidMount() {}
 
   render() {
     return (
-      <div className={this.props.classes.root}>
+      <div>
         <Card>
-          <CardContent>
-            <Typography color="textSecondary" gutterBottom>
-              Word of the Day
-            </Typography>
-            <Typography variant="h5" component="h2">
-              be lent
-            </Typography>
-            <Typography color="textSecondary">adjective</Typography>
-            <Typography variant="body2" component="p">
-              well meaning and kindly.
-              <br />
-              {'"a benevolent smile"'}
-            </Typography>
-          </CardContent>
-          <CardActions>
-            <Button size="small">Learn More</Button>
+          <CardHeader
+            title={
+              this.props.name +
+              " Eczanesi" +
+              " - " +
+              (this.props.phone == null
+                ? "Telefon numarası bulunmuyor"
+                : this.props.phone)
+            }
+            action={
+              <Typography
+                variant="subtitle1"
+                className={this.props.classes.distance}
+              >
+                {this.props.distance}
+              </Typography>
+            }
+            subheader={
+              this.props.address == null
+                ? "Adres bulunmuyor"
+                : this.props.address
+            }
+            avatar={<Avatar>{this.props.name.substr(0, 1)}</Avatar>}
+          ></CardHeader>
+          <CardActions className={this.props.classes.actions}>
+            <Button fullWidth variant="contained" color="primary">
+              <Phone
+                className={clsx(
+                  this.props.classes.leftIcon,
+                  this.props.classes.iconSmall
+                )}
+              />
+              Ara
+            </Button>
+            <Button fullWidth variant="contained" color="primary">
+              <LocationOn
+                className={clsx(
+                  this.props.classes.leftIcon,
+                  this.props.classes.iconSmall
+                )}
+              />
+              Google
+            </Button>
+            <Button fullWidth variant="contained" color="primary">
+              <LocationOn
+                className={clsx(
+                  this.props.classes.leftIcon,
+                  this.props.classes.iconSmall
+                )}
+              />
+              Yandex
+            </Button>
           </CardActions>
         </Card>
       </div>
