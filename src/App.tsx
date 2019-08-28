@@ -5,6 +5,13 @@ import Home from "./components/Home"
 import { Theme, createMuiTheme } from "@material-ui/core"
 
 import { ThemeProvider } from "@material-ui/styles"
+import { createClient } from "@google/maps"
+
+const googleMaps = createClient({
+  key: "AAA"
+})
+
+console.log("g: ", googleMaps)
 
 const theme = createMuiTheme({
   palette: {

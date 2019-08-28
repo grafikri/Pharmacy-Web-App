@@ -3,9 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@google/maps": "^0.5.5",
     "@material-ui/core": "^4.3.3",
     "@material-ui/icons": "^4.2.1",
     "@material-ui/styles": "^4.3.3",
+    "@types/google__maps": "^0.5.6",
     "@types/jest": "24.0.18",
     "@types/lodash": "^4.14.137",
     "@types/node": "12.7.2",
