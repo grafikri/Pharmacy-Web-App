@@ -21,6 +21,7 @@ export interface StyleProps extends WithStyles<typeof styles> {}
 
 interface HomeProps {
   submitCoordinate(lat: number, lng: number): void
+  handleClickGoogleMap(lat: number, lng: number): void
   list: Pharmacy[]
 }
 
@@ -89,7 +90,9 @@ class Home extends React.Component<StyleProps & HomeProps, HomeStates> {
                   lng={
                     item.location === undefined ? undefined : item.location.long
                   }
-                  handleClickGoogleMaps={(lat: number, lng: number) => {}}
+                  handleClickGoogleMaps={(lat: number, lng: number) => {
+                    this.props.handleClickGoogleMap(lat, lng)
+                  }}
                 />
               </div>
             ))}

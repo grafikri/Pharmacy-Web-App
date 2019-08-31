@@ -92,6 +92,9 @@ class Home extends React.Component {
         submitCoordinate={(lat, lng) => {
           this.calculatesLocations(lat, lng)
         }}
+        handleClickGoogleMap={(lat, lng) => {
+          this.navigateToGoogleMaps(lat, lng)
+        }}
         list={this.state.list}
       />
     )
