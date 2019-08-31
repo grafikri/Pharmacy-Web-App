@@ -1,11 +1,10 @@
 import React from "react"
 import logo from "./logo.svg"
 //import "./App.css"
-import Home from "./components/Home"
+import Home from "./components/pages/Home"
 import { Theme, createMuiTheme } from "@material-ui/core"
 
 import { ThemeProvider } from "@material-ui/styles"
-import { createClient } from "@google/maps"
 
 const theme = createMuiTheme({
   palette: {
