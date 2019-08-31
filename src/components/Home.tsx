@@ -28,7 +28,44 @@ class Home extends React.Component<StyleProps, { list: Pharmacy[] }> {
     list: []
   }
 
-  componentDidMount() {
+  google: any
+  inputSearchBox: any
+
+  constructor(props: StyleProps) {
+    super(props)
+    this.google = (window as any).google
+    this.inputSearchBox = React.createRef()
+    this.calculatesLocations = this.calculatesLocations.bind(this)
+    this.setupInput = this.setupInput.bind(this)
+  }
+
+  /**
+   * It builds input for realtime location search
+   */
+  setupInput() {
+    const map = new this.google.maps.Map(document.createElement("div"))
+    const searchBox = new this.google.maps.places.SearchBox(
+      this.inputSearchBox.current
+    )
+    searchBox.addListener("places_changed", () => {
+      const list = searchBox.getPlaces()
+
+      list.length === 0
+        ? this.calculatesLocations(0, 0)
+        : this.calculatesLocations(
+            list[0].geometry.location.lat(),
+            list[0].geometry.location.lng()
+          )
+    })
+  }
+
+  /**
+   * It brings new locations depend on coordinate
+   *
+   * @param lat latitue
+   * @param lng longitude
+   */
+  calculatesLocations(lat: number, lng: number) {
     const datas = {
       data: [
         {
@@ -914,12 +951,12 @@ class Home extends React.Component<StyleProps, { list: Pharmacy[] }> {
       }
     })
 
-    let radius = 60
+    let radius = 15
     let locations = pharmacies.map(item => ({
       ...item,
       distance: distance(
-        40.240659,
-        29.008405,
+        lat,
+        lng,
         item.location == null ? 0 : item.location.lat!,
         item.location == null ? 0 : item.location.long!,
         "K"
@@ -939,16 +976,24 @@ class Home extends React.Component<StyleProps, { list: Pharmacy[] }> {
       })
     )
 
-    console.log("p: ", orderedMyLocations)
-
     this.setState({
       list: myLocationsWithDistance
     })
   }
 
+  componentDidMount() {
+    this.setupInput()
+  }
+
   render() {
     return (
       <div className={this.props.classes.root}>
+        <input
+          type="text"
+          style={{ width: "100%" }}
+          ref={this.inputSearchBox}
+        />
+
         {this.state.list.map((item: Pharmacy, index) => (
           <div key={index} className={this.props.classes.listItem}>
             <RPharmacyCard
