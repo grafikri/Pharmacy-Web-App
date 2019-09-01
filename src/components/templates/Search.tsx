@@ -74,32 +74,32 @@ class Search extends React.Component<StyleProps & Props> {
         </AppBar>
         <div className={this.props.classes.barSpace}></div>
         <div className={this.props.classes.listContainer}>
-          {this.props.list.length === 0
-            ? "Bu adrese en yakın Eczane bulunamadı"
-            : this.props.list.map((item: Pharmacy, index) => (
-                <div key={index} className={this.props.classes.listItem}>
-                  <RPharmacyCard
-                    key={index}
-                    name={item.name}
-                    phone={item.phone}
-                    address={item.address}
-                    distance={item.distance}
-                    lat={
-                      item.location === undefined
-                        ? undefined
-                        : item.location.lat
-                    }
-                    lng={
-                      item.location === undefined
-                        ? undefined
-                        : item.location.long
-                    }
-                    handleClickGoogleMaps={(lat: number, lng: number) => {
-                      this.props.handleClickGoogleMap(lat, lng)
-                    }}
-                  />
-                </div>
-              ))}
+          {this.props.list.length === 0 ? (
+            <Typography color="textPrimary">
+              Bu adrese en yakın Eczane bulunamadı.
+            </Typography>
+          ) : (
+            this.props.list.map((item: Pharmacy, index) => (
+              <div key={index} className={this.props.classes.listItem}>
+                <RPharmacyCard
+                  key={index}
+                  name={item.name}
+                  phone={item.phone}
+                  address={item.address}
+                  distance={item.distance}
+                  lat={
+                    item.location === undefined ? undefined : item.location.lat
+                  }
+                  lng={
+                    item.location === undefined ? undefined : item.location.long
+                  }
+                  handleClickGoogleMaps={(lat: number, lng: number) => {
+                    this.props.handleClickGoogleMap(lat, lng)
+                  }}
+                />
+              </div>
+            ))
+          )}
         </div>
       </div>
     )
