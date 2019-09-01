@@ -75,7 +75,7 @@ class Home extends React.Component<StyleProps & HomeProps, HomeStates> {
           ref={this.inputSearchBox}
         />
         {this.props.list.length === 0
-          ? "Eczane bulunamadı"
+          ? "Bu adrese en yakın Eczane bulunamadı"
           : this.props.list.map((item: Pharmacy, index) => (
               <div key={index} className={this.props.classes.listItem}>
                 <RPharmacyCard
