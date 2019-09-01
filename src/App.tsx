@@ -4,7 +4,7 @@ import logo from "./logo.svg"
 import { Theme, createMuiTheme } from "@material-ui/core"
 import { ThemeProvider } from "@material-ui/styles"
 
-import Home from "./components/pages/Home"
+import Search from "./components/pages/Search"
 
 import RPharmacySearch from "./components/organisms/RPharmacySearch"
 
@@ -24,7 +24,8 @@ const App: React.FC = () => {
       }}
     >
       <ThemeProvider theme={theme}>
-        <Home />
+        {/* <Home /> */}
+        <Search />
       </ThemeProvider>
     </div>
   )
