@@ -38,6 +38,9 @@ class RPharmacyCard extends React.Component<
     address?: string
     phone?: string
     distance?: string
+    lat?: number
+    lng?: number
+    handleClickGoogleMaps(lat: number, lng: number): void
   }
 > {
   componentDidMount() {}
@@ -80,7 +83,22 @@ class RPharmacyCard extends React.Component<
               />
               Ara
             </Button>
-            <Button fullWidth variant="contained" color="primary">
+            <Button
+              fullWidth
+              variant="contained"
+              color="primary"
+              onClick={() => {
+                if (
+                  this.props.lat !== undefined &&
+                  this.props.lng !== undefined
+                ) {
+                  this.props.handleClickGoogleMaps(
+                    this.props.lat,
+                    this.props.lng
+                  )
+                }
+              }}
+            >
               <LocationOn
                 className={clsx(
                   this.props.classes.leftIcon,
