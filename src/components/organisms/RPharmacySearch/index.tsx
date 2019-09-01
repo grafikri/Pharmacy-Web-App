@@ -94,6 +94,7 @@ class RPharmacySearch extends React.Component<StyleProps & Props> {
             this.setState({
               text: e.target.value
             })
+            this.props.handleClickDeletedSearch()
           }}
           value={this.state.text}
           ref={this.inputSearchBox}
