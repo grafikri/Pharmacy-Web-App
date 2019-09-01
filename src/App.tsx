@@ -24,17 +24,7 @@ const App: React.FC = () => {
       }}
     >
       <ThemeProvider theme={theme}>
-        {/* <Home /> */}
-        <div style={{ padding: "15px" }}>
-          <RPharmacySearch
-            handleClickGoogleMap={(lat, lng) => {
-              console.log("google click: ", lat, lng)
-            }}
-            submitCoordinate={(lat, lng) => {
-              console.log("submit coordinate: ", lat, lng)
-            }}
-          />
-        </div>
+        <Home />
       </ThemeProvider>
     </div>
   )

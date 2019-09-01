@@ -2,6 +2,7 @@ import React from "react"
 import { Theme, WithStyles, withStyles, createStyles } from "@material-ui/core"
 import { Pharmacy, Coordinate } from "../../appInterfaces"
 import RPharmacyCard from "../../components/organisms/RPharmacyCard"
+import RPharmacySearch from "../organisms/RPharmacySearch"
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -28,52 +29,19 @@ interface HomeProps {
 interface HomeStates {}
 
 class Home extends React.Component<StyleProps & HomeProps, HomeStates> {
-  /**
-   * It involves google maps instance
-   */
-  google: any
-  inputSearchBox: any
-
-  constructor(props: StyleProps & HomeProps) {
-    super(props)
-    this.google = (window as any).google
-    this.inputSearchBox = React.createRef()
-    this.setupInput = this.setupInput.bind(this)
-  }
-
-  /**
-   * It builds input for realtime location search
-   */
-  setupInput() {
-    const searchBox = new this.google.maps.places.SearchBox(
-      this.inputSearchBox.current
-    )
-    searchBox.addListener("places_changed", () => {
-      const list = searchBox.getPlaces()
-
-      if (list.length === 0) {
-        return
-      }
-
-      this.props.submitCoordinate(
-        list[0].geometry.location.lat(),
-        list[0].geometry.location.lng()
-      )
-    })
-  }
-
-  componentDidMount() {
-    this.setupInput()
-  }
-
   render() {
     return (
       <div className={this.props.classes.root}>
-        <input
-          type="text"
-          style={{ width: "100%" }}
-          ref={this.inputSearchBox}
+        <RPharmacySearch
+          submitCoordinate={(lat, lng) => {
+            this.props.submitCoordinate(lat, lng)
+          }}
+          handleClickGoogleMap={(lat, lng) => {
+            this.props.handleClickGoogleMap(lat, lng)
+          }}
+          handleClickDeletedSearch={() => {}}
         />
+
         {this.props.list.length === 0
           ? "Bu adrese en yakın Eczane bulunamadı"
           : this.props.list.map((item: Pharmacy, index) => (
