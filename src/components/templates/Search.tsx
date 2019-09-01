@@ -18,6 +18,12 @@ import RPharmacyCard from "../organisms/RPharmacyCard"
 
 const styles = (theme: Theme) =>
   createStyles({
+    appBar: {
+      zIndex: 1
+    },
+    barSpace: {
+      height: "66px"
+    },
     input: {
       marginLeft: theme.spacing(1),
       flexGrow: 1
@@ -46,7 +52,7 @@ class Search extends React.Component<StyleProps & Props> {
   render() {
     return (
       <div>
-        <AppBar position="static">
+        <AppBar position="fixed" className={this.props.classes.appBar}>
           <Toolbar>
             <IconButton edge="start" color="inherit" aria-label="menu">
               <ArrowBack />
@@ -66,6 +72,7 @@ class Search extends React.Component<StyleProps & Props> {
             </div>
           </Toolbar>
         </AppBar>
+        <div className={this.props.classes.barSpace}></div>
         <div className={this.props.classes.listContainer}>
           {this.props.list.length === 0
             ? "Bu adrese en yakın Eczane bulunamadı"
