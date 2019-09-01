@@ -1,10 +1,12 @@
 import React from "react"
 import logo from "./logo.svg"
 //import "./App.css"
-import Home from "./components/pages/Home"
 import { Theme, createMuiTheme } from "@material-ui/core"
-
 import { ThemeProvider } from "@material-ui/styles"
+
+import Home from "./components/pages/Home"
+
+import RPharmacySearch from "./components/organisms/RPharmacySearch"
 
 const theme = createMuiTheme({
   palette: {
@@ -22,7 +24,17 @@ const App: React.FC = () => {
       }}
     >
       <ThemeProvider theme={theme}>
-        <Home />
+        {/* <Home /> */}
+        <div style={{ padding: "15px" }}>
+          <RPharmacySearch
+            handleClickGoogleMap={(lat, lng) => {
+              console.log("google click: ", lat, lng)
+            }}
+            submitCoordinate={(lat, lng) => {
+              console.log("submit coordinate: ", lat, lng)
+            }}
+          />
+        </div>
       </ThemeProvider>
     </div>
   )
