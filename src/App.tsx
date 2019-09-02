@@ -25,8 +25,8 @@ const App: React.FC = () => {
         }}
       >
         <ThemeProvider theme={theme}>
-          <Route path="/" component={Home} />
-          <Route path="/search/:id" component={Search} />
+          <Route exact path="/" component={Home} />
+          <Route path={["/search", "/search/:id"]} component={Search} />
         </ThemeProvider>
       </div>
     </Router>
