@@ -3,8 +3,10 @@ import logo from "./logo.svg"
 //import "./App.css"
 import { createMuiTheme } from "@material-ui/core"
 import { ThemeProvider } from "@material-ui/styles"
+import { BrowserRouter as Router, Route } from "react-router-dom"
 
 import Search from "./components/pages/Search"
+import Home from "./components/pages/Home"
 
 const theme = createMuiTheme({
   palette: {
@@ -14,18 +16,20 @@ const theme = createMuiTheme({
 
 const App: React.FC = () => {
   return (
-    <div
-      className="App"
-      style={{
-        background: theme.palette.background.default,
-        minHeight: "100vh"
-      }}
-    >
-      <ThemeProvider theme={theme}>
-        {/* <Home /> */}
-        <Search />
-      </ThemeProvider>
-    </div>
+    <Router>
+      <div
+        className="App"
+        style={{
+          background: theme.palette.background.default,
+          minHeight: "100vh"
+        }}
+      >
+        <ThemeProvider theme={theme}>
+          <Route path="/" component={Home} />
+          <Route path="/search/:id" component={Search} />
+        </ThemeProvider>
+      </div>
+    </Router>
   )
 }
 
