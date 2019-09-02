@@ -14,6 +14,7 @@ import { ArrowBack } from "@material-ui/icons"
 import RPharmacySearch from "../organisms/RPharmacySearch"
 import { withStyles } from "@material-ui/styles"
 import { Pharmacy } from "../../appInterfaces"
+import { Link } from "react-router-dom"
 import RPharmacyCard from "../organisms/RPharmacyCard"
 
 const styles = (theme: Theme) =>
@@ -36,6 +37,13 @@ const styles = (theme: Theme) =>
       maxWidth: "400px",
       padding: theme.spacing(2),
       margin: "auto"
+    },
+    backButtonLink: {
+      padding: 0,
+      color: "inherit",
+      cursor: "inherit",
+      textDecoration: "inherit",
+      lineHeight: 0
     }
   })
 
@@ -54,9 +62,11 @@ class Search extends React.Component<StyleProps & Props> {
       <div>
         <AppBar position="fixed" className={this.props.classes.appBar}>
           <Toolbar>
-            <IconButton edge="start" color="inherit" aria-label="menu">
-              <ArrowBack />
-            </IconButton>
+            <Link to="/" className={this.props.classes.backButtonLink}>
+              <IconButton edge="start" color="inherit" aria-label="menu">
+                <ArrowBack />
+              </IconButton>
+            </Link>
             <div className={this.props.classes.input}>
               <RPharmacySearch
                 submitCoordinate={(lat, lng) => {
