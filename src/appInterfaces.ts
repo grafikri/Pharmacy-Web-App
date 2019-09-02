@@ -4,7 +4,7 @@
 export interface Pharmacy {
   name: string
   address?: string
-  location?: Coordinate
+  location?: Coordinate | undefined
   distance?: string
   phone?: string
 }
@@ -13,6 +13,6 @@ export interface Pharmacy {
  * Standard coordinates info
  */
 export interface Coordinate {
-  lat?: number
-  long?: number
+  lat: number
+  lng: number
 }

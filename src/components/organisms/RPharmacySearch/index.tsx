@@ -27,7 +27,7 @@ const styles = (theme: Theme) =>
 export interface StyleProps extends WithStyles<typeof styles> {}
 
 interface Props {
-  submitCoordinate(lat: number, lng: number): void
+  submitCoordinate(lat: number, lng: number, address: string): void
   handleClickGoogleMap(lat: number, lng: number): void
   handleClickDeletedSearch(): void
 }
@@ -72,13 +72,16 @@ class RPharmacySearch extends React.Component<StyleProps & Props> {
         return
       }
 
+      const address = this.inputSearchBox.current.children[0].value
+
       this.setState({
-        text: this.inputSearchBox.current.children[0].value
+        text: address
       })
 
       this.props.submitCoordinate(
         list[0].geometry.location.lat(),
-        list[0].geometry.location.lng()
+        list[0].geometry.location.lng(),
+        address
       )
     })
   }

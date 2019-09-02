@@ -52,10 +52,11 @@ export function distance(
  */
 export function calculatesLocations(lat: number, lng: number): Pharmacy[] {
   const pharmacies: Pharmacy[] = datas.data.map(item => {
-    const location: Coordinate =
-      item.konum == null
-        ? {}
-        : { lat: +item.konum.split(",")[0], long: +item.konum!.split(",")[1] }
+    let location: undefined | Coordinate =
+      item.konum == undefined
+        ? undefined
+        : { lat: +item.konum.split(",")[0], lng: +item.konum!.split(",")[1] }
+
     return {
       name: item.eczane_adi,
       location,
@@ -71,7 +72,7 @@ export function calculatesLocations(lat: number, lng: number): Pharmacy[] {
       lat,
       lng,
       item.location == null ? 0 : item.location.lat!,
-      item.location == null ? 0 : item.location.long!,
+      item.location == null ? 0 : item.location.lng!,
       "K"
     )
   }))
