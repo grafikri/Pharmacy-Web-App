@@ -4,11 +4,10 @@ import {
   WithStyles,
   withStyles,
   createStyles,
-  Paper,
   Typography,
   Button
 } from "@material-ui/core"
-import { MyLocation, LocationOn, Directions } from "@material-ui/icons"
+import { MyLocation, Directions } from "@material-ui/icons"
 import { Link } from "react-router-dom"
 
 const styles = (theme: Theme) =>
@@ -37,13 +36,19 @@ const styles = (theme: Theme) =>
 
 export interface StyleProps extends WithStyles<typeof styles> {}
 
-interface HomeStates {}
+interface Props {
+  handleClickFindMyLocation(): void
+}
+interface States {}
 
-class Home extends React.Component<StyleProps, HomeStates> {
+class Home extends React.Component<Props & StyleProps, States> {
   render() {
     return (
       <div className={this.props.classes.root}>
         <Button
+          onClick={() => {
+            this.props.handleClickFindMyLocation()
+          }}
           size="large"
           variant="contained"
           color="primary"
@@ -58,7 +63,7 @@ class Home extends React.Component<StyleProps, HomeStates> {
         </Button>
 
         <Link
-          to="/search/adres"
+          to="/search"
           className={this.props.classes.reactRouterLinkDefault}
         >
           <Button
