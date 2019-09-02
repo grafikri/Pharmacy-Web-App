@@ -39,7 +39,7 @@ const styles = (theme: Theme) =>
       margin: "auto"
     },
     backButtonLink: {
-      padding: "inherit",
+      padding: 0,
       color: "inherit",
       cursor: "inherit",
       textDecoration: "inherit",
@@ -62,11 +62,11 @@ class Search extends React.Component<StyleProps & Props> {
       <div>
         <AppBar position="fixed" className={this.props.classes.appBar}>
           <Toolbar>
-            <IconButton edge="start" color="inherit" aria-label="menu">
-              <Link to="/" className={this.props.classes.backButtonLink}>
+            <Link to="/" className={this.props.classes.backButtonLink}>
+              <IconButton edge="start" color="inherit" aria-label="menu">
                 <ArrowBack />
-              </Link>
-            </IconButton>
+              </IconButton>
+            </Link>
             <div className={this.props.classes.input}>
               <RPharmacySearch
                 submitCoordinate={(lat, lng) => {
