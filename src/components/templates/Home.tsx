@@ -1,101 +1,80 @@
 import React from "react"
-import { Theme, WithStyles, withStyles, createStyles } from "@material-ui/core"
-import { Pharmacy, Coordinate } from "../../appInterfaces"
-import RPharmacyCard from "../../components/organisms/RPharmacyCard"
+import {
+  Theme,
+  WithStyles,
+  withStyles,
+  createStyles,
+  Paper,
+  Typography,
+  Button
+} from "@material-ui/core"
+import { MyLocation, LocationOn, Directions } from "@material-ui/icons"
+import { Link } from "react-router-dom"
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      maxWidth: 400,
-      paddingTop: theme.spacing(1),
-      paddingBottom: theme.spacing(1),
-      margin: "auto"
+      display: "flex",
+      justifyContent: "center",
+      minHeight: "100vh",
+      alignItems: "center"
     },
-    listItem: {
-      marginTop: theme.spacing(1),
+    paper: {
+      padding: theme.spacing(3),
+      margin: theme.spacing(1)
+    },
+    buttonIcon: {
       marginBottom: theme.spacing(1)
+    },
+    reactRouterLinkDefault: {
+      padding: "inherit",
+      color: "inherit",
+      cursor: "inherit",
+      textDecoration: "inherit",
+      lineHeight: 0
     }
   })
 
 export interface StyleProps extends WithStyles<typeof styles> {}
 
-interface HomeProps {
-  submitCoordinate(lat: number, lng: number): void
-  handleClickGoogleMap(lat: number, lng: number): void
-  list: Pharmacy[]
-}
-
 interface HomeStates {}
 
-class Home extends React.Component<StyleProps & HomeProps, HomeStates> {
-  /**
-   * It involves google maps instance
-   */
-  google: any
-  inputSearchBox: any
-
-  constructor(props: StyleProps & HomeProps) {
-    super(props)
-    this.google = (window as any).google
-    this.inputSearchBox = React.createRef()
-    this.setupInput = this.setupInput.bind(this)
-  }
-
-  /**
-   * It builds input for realtime location search
-   */
-  setupInput() {
-    const searchBox = new this.google.maps.places.SearchBox(
-      this.inputSearchBox.current
-    )
-    searchBox.addListener("places_changed", () => {
-      const list = searchBox.getPlaces()
-
-      if (list.length === 0) {
-        return
-      }
-
-      this.props.submitCoordinate(
-        list[0].geometry.location.lat(),
-        list[0].geometry.location.lng()
-      )
-    })
-  }
-
-  componentDidMount() {
-    this.setupInput()
-  }
-
+class Home extends React.Component<StyleProps, HomeStates> {
   render() {
     return (
       <div className={this.props.classes.root}>
-        <input
-          type="text"
-          style={{ width: "100%" }}
-          ref={this.inputSearchBox}
-        />
-        {this.props.list.length === 0
-          ? "Bu adrese en yakın Eczane bulunamadı"
-          : this.props.list.map((item: Pharmacy, index) => (
-              <div key={index} className={this.props.classes.listItem}>
-                <RPharmacyCard
-                  key={index}
-                  name={item.name}
-                  phone={item.phone}
-                  address={item.address}
-                  distance={item.distance}
-                  lat={
-                    item.location === undefined ? undefined : item.location.lat
-                  }
-                  lng={
-                    item.location === undefined ? undefined : item.location.long
-                  }
-                  handleClickGoogleMaps={(lat: number, lng: number) => {
-                    this.props.handleClickGoogleMap(lat, lng)
-                  }}
-                />
-              </div>
-            ))}
+        <Button
+          size="large"
+          variant="contained"
+          color="primary"
+          className={this.props.classes.paper}
+        >
+          <div>
+            <MyLocation className={this.props.classes.buttonIcon} />
+            <Typography variant="h5" component="h3">
+              Konum
+            </Typography>
+          </div>
+        </Button>
+
+        <Link
+          to="/search/adres"
+          className={this.props.classes.reactRouterLinkDefault}
+        >
+          <Button
+            size="large"
+            variant="contained"
+            color="primary"
+            className={this.props.classes.paper}
+          >
+            <div>
+              <Directions className={this.props.classes.buttonIcon} />
+              <Typography variant="h5" component="h3">
+                Adres
+              </Typography>
+            </div>
+          </Button>
+        </Link>
       </div>
     )
   }
