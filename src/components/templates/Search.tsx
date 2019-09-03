@@ -118,14 +118,14 @@ class Search extends React.Component<StyleProps & Props> {
                     address={item.address}
                     distance={item.distance}
                     lat={
-                      item.location === undefined
+                      item.coordinate === undefined
                         ? undefined
-                        : item.location.lat
+                        : item.coordinate.lat
                     }
                     lng={
-                      item.location === undefined
+                      item.coordinate === undefined
                         ? undefined
-                        : item.location.lng
+                        : item.coordinate.lng
                     }
                     handleClickGoogleMaps={(lat: number, lng: number) => {
                       this.props.handleClickGoogleMap(lat, lng)
