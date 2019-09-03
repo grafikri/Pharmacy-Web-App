@@ -18,11 +18,11 @@ class Home extends React.Component<RouteComponentProps> {
 
     const position = await this.getLoaction()
     this.setState({
-      locationFindingMessage: "İzin alındı, konum tespit ediliyor"
+      locationFindingMessage: "İzin alındı, konum alınıyor..."
     })
     await this.wait()
     this.setState({
-      locationFindingMessage: "Konumunuz tespit edildi. Yönlendiriliyorsunuz..."
+      locationFindingMessage: "Konum alındı. Yönlendiriliyorsunuz..."
     })
     await this.wait()
     this.props.history.push(

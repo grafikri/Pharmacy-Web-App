@@ -59,6 +59,7 @@ interface Props {
   submitCoordinate(lat: number, lng: number, address: string): void
   handleClickGoogleMap(lat: number, lng: number): void
   handleClickDeletedSearch(): void
+  autoFocusSearch?: boolean
   address: string
   list: Pharmacy[]
   message: string
@@ -80,6 +81,7 @@ class Search extends React.Component<StyleProps & Props> {
             </Link>
             <div className={this.props.classes.input}>
               <RPharmacySearch
+                autoFocus={this.props.autoFocusSearch}
                 submitCoordinate={(lat, lng, address) => {
                   this.props.submitCoordinate(lat, lng, address)
                 }}

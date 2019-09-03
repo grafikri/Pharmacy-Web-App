@@ -13,7 +13,8 @@ class Search extends React.Component<RouteComponentProps> {
     address: "",
     pageLoading: false,
     message:
-      "Arama yaptıktan sonra girdiğiniz adrese en yakın nöbetçi eczaneler burada listelenecektir."
+      "Arama yaptıktan sonra girdiğiniz adrese en yakın nöbetçi eczaneler burada listelenecektir.",
+    autoFocusSearch: false
   }
   componentDidMount() {
     const params = this.props.match.params
@@ -24,6 +25,10 @@ class Search extends React.Component<RouteComponentProps> {
       }
 
       this.updateViewWithCoordinateAndAddress(coordinate)
+    } else {
+      this.setState({
+        autoFocusSearch: true
+      })
     }
   }
 
@@ -43,6 +48,7 @@ class Search extends React.Component<RouteComponentProps> {
           list: list,
           address: address == undefined ? placeDetails.placeName : address,
           pageLoading: false,
+          autoFocusSearch: list.length === 0 ? true : false,
           message:
             list.length == 0
               ? "Bu konuma yakın bir nöbetçi eczane bulunmadı. Farklı bir adres girmeyi deneyin."
@@ -111,6 +117,7 @@ class Search extends React.Component<RouteComponentProps> {
   render() {
     return (
       <SearchTemplate
+        autoFocusSearch={this.state.autoFocusSearch}
         loading={this.state.pageLoading}
         message={this.state.message}
         address={this.state.address}
