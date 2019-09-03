@@ -30,6 +30,7 @@ interface Props {
   submitCoordinate(lat: number, lng: number, address: string): void
   handleClickGoogleMap(lat: number, lng: number): void
   handleClickDeletedSearch(): void
+  autoFocus?: boolean
 }
 
 interface States {
@@ -89,6 +90,13 @@ class RPharmacySearch extends React.Component<StyleProps & Props> {
   componentDidMount() {
     this.setupInput()
   }
+
+  componentWillUpdate(nextProps: StyleProps & Props) {
+    if (nextProps.autoFocus) {
+      this.inputSearchBox.current.children[0].focus()
+    }
+  }
+
   render() {
     return (
       <Paper className={this.props.classes.root}>
@@ -134,6 +142,7 @@ class RPharmacySearch extends React.Component<StyleProps & Props> {
                 text: ""
               })
               this.props.handleClickDeletedSearch()
+              this.inputSearchBox.current.children[0].focus()
             }}
           >
             <Close />
