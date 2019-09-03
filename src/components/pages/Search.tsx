@@ -10,7 +10,9 @@ import { RouteComponentProps, withRouter } from "react-router"
 class Search extends React.Component<RouteComponentProps> {
   state = {
     list: [],
-    address: ""
+    address: "",
+    pageLoading: false,
+    message: "Arama yaptıktan sonra nöbetçi eczaneler burada listelenecektir."
   }
   componentDidMount() {
     const params = this.props.match.params
@@ -25,11 +27,25 @@ class Search extends React.Component<RouteComponentProps> {
   }
 
   updateViewWithCoordinateAndAddress(coordinate: Coordinate, address?: string) {
+    this.setState({
+      pageLoading: true,
+      message: "",
+      list: [],
+      address: ""
+    })
+
     this.getPlaceDetailsFromCoordinate(coordinate)
       .then(placeDetails => {
+        const list = calculatesLocations(placeDetails.coordinate)
+
         this.setState({
-          list: calculatesLocations(placeDetails.coordinate),
-          address: address == undefined ? placeDetails.placeName : address
+          list: list,
+          address: address == undefined ? placeDetails.placeName : address,
+          pageLoading: false,
+          message:
+            list.length == 0
+              ? "Bu konuma yakın bir nöbetçi eczane bulunmadı. Farklı bir adres girmeyi deneyin."
+              : ""
         })
       })
       .catch(error => {
@@ -94,6 +110,8 @@ class Search extends React.Component<RouteComponentProps> {
   render() {
     return (
       <SearchTemplate
+        loading={this.state.pageLoading}
+        message={this.state.message}
         address={this.state.address}
         submitCoordinate={(lat, lng, address) => {
           this.props.history.push("/search/" + lat + "/" + lng)
@@ -104,7 +122,9 @@ class Search extends React.Component<RouteComponentProps> {
         }}
         handleClickDeletedSearch={() => {
           this.setState({
-            list: []
+            list: [],
+            pageLoading: false,
+            message: "En yakın eczaneleri görmek için bir adres girin"
           })
         }}
         list={this.state.list}
