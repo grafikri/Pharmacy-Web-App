@@ -5,9 +5,14 @@ import {
   withStyles,
   createStyles,
   Typography,
-  Button
+  Button,
+  Dialog,
+  DialogContent,
+  DialogActions,
+  CircularProgress,
+  LinearProgress
 } from "@material-ui/core"
-import { MyLocation, Directions } from "@material-ui/icons"
+import { ArrowForwardOutlined, Directions } from "@material-ui/icons"
 import { Link } from "react-router-dom"
 
 const styles = (theme: Theme) =>
@@ -21,6 +26,9 @@ const styles = (theme: Theme) =>
     paper: {
       padding: theme.spacing(3),
       margin: theme.spacing(1)
+    },
+    arrow: {
+      marginLeft: theme.spacing(2)
     },
     buttonIcon: {
       marginBottom: theme.spacing(1)
@@ -38,48 +46,100 @@ export interface StyleProps extends WithStyles<typeof styles> {}
 
 interface Props {
   handleClickFindMyLocation(): void
+  locationFinding: boolean
+  locationFindingMessage: string
+  loactionDetectError: boolean
+  loactionDetectErrorMessage: string
+  handleClickLoactionDetectError(): void
 }
-interface States {}
+interface States {
+  locationDialogOpen: boolean
+}
 
 class Home extends React.Component<Props & StyleProps, States> {
+  state = {
+    locationDialogOpen: false
+  }
   render() {
     return (
       <div className={this.props.classes.root}>
+        {/* It will being shown when location detect is fail */}
+        <Dialog
+          onClose={() => {}}
+          aria-labelledby="customized-dialog-title"
+          open={this.props.loactionDetectError}
+        >
+          <DialogContent dividers>
+            <Typography gutterBottom>
+              {this.props.loactionDetectErrorMessage}
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={() => {
+                this.props.handleClickLoactionDetectError()
+              }}
+              color="primary"
+            >
+              Devam Et
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        {/* Shows detect location information */}
+        <Dialog
+          aria-labelledby="customized-dialog-title"
+          open={this.props.locationFinding}
+        >
+          <DialogContent dividers>
+            <Typography gutterBottom>
+              {this.props.locationFindingMessage}
+            </Typography>
+            <LinearProgress />
+          </DialogContent>
+        </Dialog>
+
+        {/* Prewarning for location request */}
+        <Dialog
+          onClose={() => {}}
+          aria-labelledby="customized-dialog-title"
+          open={this.state.locationDialogOpen}
+        >
+          <DialogContent dividers>
+            <Typography gutterBottom>
+              Konum izni istenecektir. Onay vermelisiniz.
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={() => {
+                this.setState({
+                  locationDialogOpen: false
+                })
+                this.props.handleClickFindMyLocation()
+              }}
+              color="primary"
+            >
+              Tamam
+            </Button>
+          </DialogActions>
+        </Dialog>
+
         <Button
           onClick={() => {
-            this.props.handleClickFindMyLocation()
+            this.setState({
+              locationDialogOpen: true
+            })
           }}
           size="large"
           variant="contained"
           color="primary"
-          className={this.props.classes.paper}
         >
-          <div>
-            <MyLocation className={this.props.classes.buttonIcon} />
-            <Typography variant="h5" component="h3">
-              Konum
-            </Typography>
-          </div>
+          <Typography variant="h5" component="h3">
+            En yakın nöbetçi eczaneleri getir
+          </Typography>
+          <ArrowForwardOutlined className={this.props.classes.arrow} />
         </Button>
-
-        <Link
-          to="/search"
-          className={this.props.classes.reactRouterLinkDefault}
-        >
-          <Button
-            size="large"
-            variant="contained"
-            color="primary"
-            className={this.props.classes.paper}
-          >
-            <div>
-              <Directions className={this.props.classes.buttonIcon} />
-              <Typography variant="h5" component="h3">
-                Adres
-              </Typography>
-            </div>
-          </Button>
-        </Link>
       </div>
     )
   }

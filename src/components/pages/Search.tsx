@@ -12,7 +12,8 @@ class Search extends React.Component<RouteComponentProps> {
     list: [],
     address: "",
     pageLoading: false,
-    message: "Arama yaptıktan sonra nöbetçi eczaneler burada listelenecektir."
+    message:
+      "Arama yaptıktan sonra girdiğiniz adrese en yakın nöbetçi eczaneler burada listelenecektir."
   }
   componentDidMount() {
     const params = this.props.match.params
