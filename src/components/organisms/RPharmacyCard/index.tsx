@@ -51,12 +51,14 @@ class RPharmacyCard extends React.Component<
         <Card>
           <CardHeader
             title={
-              this.props.name +
-              " Eczanesi" +
-              " - " +
-              (this.props.phone == null
-                ? "Telefon numarası bulunmuyor"
-                : this.props.phone)
+              <div>
+                <Typography>{this.props.name + " Eczanesi"}</Typography>
+                <Typography>
+                  {this.props.phone == null
+                    ? "Telefon numarası bulunmuyor"
+                    : this.props.phone}
+                </Typography>
+              </div>
             }
             action={
               <Typography
@@ -74,15 +76,22 @@ class RPharmacyCard extends React.Component<
             avatar={<Avatar>{this.props.name.substr(0, 1)}</Avatar>}
           ></CardHeader>
           <CardActions className={this.props.classes.actions}>
-            <Button fullWidth variant="contained" color="primary">
+            <Button
+              disabled={this.props.phone ? false : true}
+              href={"tel: " + this.props.phone}
+              fullWidth
+              variant="contained"
+              color="primary"
+            >
               <Phone
                 className={clsx(
                   this.props.classes.leftIcon,
                   this.props.classes.iconSmall
                 )}
               />
-              Ara
+              {this.props.phone ? "Ara" : "Bulunmuyor"}
             </Button>
+
             <Button
               fullWidth
               variant="contained"
