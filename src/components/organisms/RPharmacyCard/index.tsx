@@ -107,7 +107,7 @@ class RPharmacyCard extends React.Component<
               />
               Google
             </Button>
-            <Button fullWidth variant="contained" color="primary">
+            {/* <Button fullWidth variant="contained" color="primary">
               <LocationOn
                 className={clsx(
                   this.props.classes.leftIcon,
@@ -115,7 +115,7 @@ class RPharmacyCard extends React.Component<
                 )}
               />
               Yandex
-            </Button>
+            </Button> */}
           </CardActions>
         </Card>
       </div>

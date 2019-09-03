@@ -9,7 +9,8 @@ import {
   Theme,
   createStyles,
   WithStyles,
-  Box
+  Box,
+  CircularProgress
 } from "@material-ui/core"
 import { ArrowBack } from "@material-ui/icons"
 import RPharmacySearch from "../organisms/RPharmacySearch"
@@ -18,11 +19,16 @@ import { Pharmacy } from "../../appInterfaces"
 import { Link } from "react-router-dom"
 import RPharmacyCard from "../organisms/RPharmacyCard"
 import { withRouter } from "react-router-dom"
+import RPharmacyList from "../organisms/RPharmacyList"
 
 const styles = (theme: Theme) =>
   createStyles({
     appBar: {
       zIndex: 1
+    },
+    circular: {
+      marginTop: theme.spacing(3),
+      textAlign: "center"
     },
     barSpace: {
       height: "66px"
@@ -30,10 +36,6 @@ const styles = (theme: Theme) =>
     input: {
       marginLeft: theme.spacing(1),
       flexGrow: 1
-    },
-    listItem: {
-      marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(1)
     },
     listContainer: {
       maxWidth: "400px",
@@ -49,7 +51,7 @@ const styles = (theme: Theme) =>
     },
     address: {
       margin: theme.spacing(1),
-      marginTop: theme.spacing(2)
+      marginTop: theme.spacing(3)
     }
   })
 
@@ -59,6 +61,8 @@ interface Props {
   handleClickDeletedSearch(): void
   address: string
   list: Pharmacy[]
+  message: string
+  loading: boolean
 }
 
 interface StyleProps extends WithStyles<typeof styles> {}
@@ -90,52 +94,41 @@ class Search extends React.Component<StyleProps & Props> {
           </Toolbar>
         </AppBar>
         <div className={this.props.classes.barSpace}></div>
-        {this.props.list.length === 0 ? (
-          ""
-        ) : (
-          <Typography
-            align="center"
-            variant="h1"
-            className={this.props.classes.address}
-          >
-            {this.props.address} yakınlarında nöbetçi eczaneler
-          </Typography>
-        )}
 
-        <div className={this.props.classes.listContainer}>
-          {this.props.list.length === 0 ? (
-            <Typography color="textPrimary">
-              Bu adrese en yakın Eczane bulunamadı.
-            </Typography>
-          ) : (
-            <div>
-              {this.props.list.map((item: Pharmacy, index) => (
-                <div key={index} className={this.props.classes.listItem}>
-                  <RPharmacyCard
-                    key={index}
-                    name={item.name}
-                    phone={item.phone}
-                    address={item.address}
-                    distance={item.distance}
-                    lat={
-                      item.location === undefined
-                        ? undefined
-                        : item.location.lat
-                    }
-                    lng={
-                      item.location === undefined
-                        ? undefined
-                        : item.location.lng
-                    }
-                    handleClickGoogleMaps={(lat: number, lng: number) => {
-                      this.props.handleClickGoogleMap(lat, lng)
-                    }}
-                  />
-                </div>
-              ))}
+        {this.props.loading ? (
+          <div className={this.props.classes.circular}>
+            <CircularProgress />
+          </div>
+        ) : (
+          <div>
+            {this.props.list.length !== 0 ? (
+              <Typography
+                align="center"
+                variant="h1"
+                className={this.props.classes.address}
+              >
+                {this.props.address} adresine en yakın nöbetçi eczaneler
+              </Typography>
+            ) : (
+              ""
+            )}
+
+            {this.props.message.length === 0 ? (
+              ""
+            ) : (
+              <Typography className={this.props.classes.address} align="center">
+                {this.props.message}
+              </Typography>
+            )}
+
+            <div className={this.props.classes.listContainer}>
+              <RPharmacyList
+                list={this.props.list}
+                handleClickGoogleMap={this.props.handleClickGoogleMap}
+              />
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     )
   }

@@ -10,22 +10,56 @@ import { RouteComponentProps, withRouter } from "react-router"
 class Search extends React.Component<RouteComponentProps> {
   state = {
     list: [],
-    address: ""
+    address: "",
+    pageLoading: false,
+    message:
+      "Arama yaptıktan sonra girdiğiniz adrese en yakın nöbetçi eczaneler burada listelenecektir."
   }
   componentDidMount() {
     const params = this.props.match.params
-    if (_.isEmpty(params)) {
-      console.log("search")
-    } else {
+    if (!_.isEmpty(params)) {
       const coordinate: Coordinate = {
         lat: +(this.props.match.params as any).lat,
         lng: +(this.props.match.params as any).lng
       }
-      this.getPlaceDetailsFromCoordinate(coordinate)
+
+      this.updateViewWithCoordinateAndAddress(coordinate)
     }
   }
 
-  getPlaceDetailsFromCoordinate(coordinate: Coordinate, address?: string) {
+  updateViewWithCoordinateAndAddress(coordinate: Coordinate, address?: string) {
+    this.setState({
+      pageLoading: true,
+      message: "",
+      list: [],
+      address: ""
+    })
+
+    this.getPlaceDetailsFromCoordinate(coordinate)
+      .then(placeDetails => {
+        const list = calculatesLocations(placeDetails.coordinate)
+
+        this.setState({
+          list: list,
+          address: address == undefined ? placeDetails.placeName : address,
+          pageLoading: false,
+          message:
+            list.length == 0
+              ? "Bu konuma yakın bir nöbetçi eczane bulunmadı. Farklı bir adres girmeyi deneyin."
+              : ""
+        })
+      })
+      .catch(error => {
+        console.log("e: ", error)
+      })
+  }
+
+  getPlaceDetailsFromCoordinate(
+    coordinate: Coordinate
+  ): Promise<{
+    coordinate: Coordinate
+    placeName: string
+  }> {
     const google = (window as any).google
     const request = {
       location: new google.maps.LatLng({ ...coordinate }),
@@ -35,19 +69,21 @@ class Search extends React.Component<RouteComponentProps> {
     const service = new google.maps.places.PlacesService(
       document.createElement("div")
     )
-    service.nearbySearch(request, (results: any, status: any) => {
-      if (results.length === 0) {
-        // area no found
-        console.log("kordinate göre yer bulunamadı")
-        return
-      }
 
-      this.setState({
-        list: calculatesLocations(
-          results[0].geometry.location.lat(),
-          results[0].geometry.location.lng()
-        ),
-        address: address === undefined ? results[0].vicinity : address
+    return new Promise((resolve, reject) => {
+      service.nearbySearch(request, (results: any, status: any) => {
+        if (results.length === 0) {
+          reject("Kordinatlara yakın bir yer bulunamadı.")
+          return
+        }
+
+        resolve({
+          coordinate: {
+            lat: results[0].geometry.location.lat(),
+            lng: results[0].geometry.location.lng()
+          },
+          placeName: results[0].vicinity
+        })
       })
     })
   }
@@ -75,17 +111,21 @@ class Search extends React.Component<RouteComponentProps> {
   render() {
     return (
       <SearchTemplate
+        loading={this.state.pageLoading}
+        message={this.state.message}
         address={this.state.address}
         submitCoordinate={(lat, lng, address) => {
           this.props.history.push("/search/" + lat + "/" + lng)
-          this.getPlaceDetailsFromCoordinate({ lat, lng }, address)
+          this.updateViewWithCoordinateAndAddress({ lat, lng }, address)
         }}
         handleClickGoogleMap={(lat, lng) => {
           this.navigateToGoogleMaps(lat, lng)
         }}
         handleClickDeletedSearch={() => {
           this.setState({
-            list: []
+            list: [],
+            pageLoading: false,
+            message: "En yakın eczaneleri görmek için bir adres girin"
           })
         }}
         list={this.state.list}

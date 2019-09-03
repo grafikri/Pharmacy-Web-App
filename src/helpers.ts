@@ -1,4 +1,3 @@
-import datas from "./pharmacies.json"
 import { Pharmacy, Coordinate } from "./appInterfaces.js"
 import _ from "lodash"
 
@@ -50,17 +49,19 @@ export function distance(
  * @param lat latitue
  * @param lng longitude
  */
-export function calculatesLocations(lat: number, lng: number): Pharmacy[] {
-  const pharmacies: Pharmacy[] = datas.data.map(item => {
-    let location: undefined | Coordinate =
-      item.konum == undefined
-        ? undefined
-        : { lat: +item.konum.split(",")[0], lng: +item.konum!.split(",")[1] }
+export function calculatesLocations(coordinate: Coordinate): Pharmacy[] {
+  const list: {
+    address: string
+    coordinate: Coordinate
+    name: string
+    phone: string
+  }[] = JSON.parse(localStorage.getItem("pharmacies")!)
 
+  const pharmacies: Pharmacy[] = list.map(item => {
     return {
-      name: item.eczane_adi,
-      location,
-      address: item.eczane_ilce + " - " + item.eczane_adres,
+      name: item.name,
+      coordinate: item.coordinate,
+      address: item.address,
       phone: item.phone
     }
   })
@@ -69,10 +70,10 @@ export function calculatesLocations(lat: number, lng: number): Pharmacy[] {
   let locations = pharmacies.map(item => ({
     ...item,
     distance: distance(
-      lat,
-      lng,
-      item.location == null ? 0 : item.location.lat!,
-      item.location == null ? 0 : item.location.lng!,
+      coordinate.lat,
+      coordinate.lng,
+      item.coordinate == null ? 0 : item.coordinate.lat!,
+      item.coordinate == null ? 0 : item.coordinate.lng!,
       "K"
     )
   }))
