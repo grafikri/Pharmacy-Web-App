@@ -2,7 +2,7 @@ import React from "react"
 import logo from "./logo.svg"
 //import "./App.css"
 import axios from "axios"
-import { createMuiTheme, Typography } from "@material-ui/core"
+import { createMuiTheme, Typography, CircularProgress } from "@material-ui/core"
 import { ThemeProvider } from "@material-ui/styles"
 import { BrowserRouter as Router, Route } from "react-router-dom"
 
@@ -21,46 +21,84 @@ const theme = createMuiTheme({
 })
 
 class App extends React.Component {
+  state = {
+    loading: true,
+    message: ""
+  }
   componentDidMount() {
     if (typeof Storage === "undefined") {
-      // App will never start.
+      this.setState({
+        loading: false,
+        message:
+          "Daha güncel bir tarayıcı kullanmayı deneyin. Google Chrome, Safari yada Firefox'u deneyin."
+      })
       return
     }
 
-    if (localStorage.getItem("pharmacies") === null) {
-      axios
-        .get(
-          "https://us-central1-pharmacy-251220.cloudfunctions.net/getIstanbul"
-        )
-        .then(response => {
-          localStorage.setItem("pharmacies", JSON.stringify(response.data.data))
-        })
-        .catch(error => {
-          console.log("e: ", error)
-        })
+    if (localStorage.getItem("pharmacies") !== null) {
+      this.setState({
+        loading: false
+      })
+      return
     }
+
+    axios
+      .get("https://us-central1-pharmacy-251220.cloudfunctions.net/getIstanbul")
+      .then(response => {
+        localStorage.setItem("pharmacies", JSON.stringify(response.data.data))
+      })
+      .catch(error => {
+        this.setState({
+          message: error
+        })
+      })
+      .finally(() => {
+        this.setState({
+          loading: false
+        })
+      })
   }
 
   render() {
+    const styleCenter = {
+      minHeight: "100vh",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "25px"
+    }
+
     return (
-      <Router>
-        <div
-          className="App"
-          style={{
-            background: theme.palette.background.default,
-            minHeight: "100vh"
-          }}
-        >
-          <ThemeProvider theme={theme}>
-            <Route exact path="/" component={Home} />
-            <Route
-              exact
-              path={["/search", "/search/:lat/:lng"]}
-              component={Search}
-            />
-          </ThemeProvider>
-        </div>
-      </Router>
+      <div
+        className="App"
+        style={{
+          background: theme.palette.background.default,
+          minHeight: "100vh"
+        }}
+      >
+        <ThemeProvider theme={theme}>
+          {this.state.loading ? (
+            <div style={styleCenter}>
+              <CircularProgress />
+            </div>
+          ) : (
+            <div>
+              {this.state.message == "" ? (
+                <Router>
+                  <Route exact path="/" component={Home} />
+                  <Route
+                    exact
+                    path={["/search", "/search/:lat/:lng"]}
+                    component={Search}
+                  />
+                </Router>
+              ) : (
+                <div style={styleCenter}>{this.state.message}</div>
+              )}
+            </div>
+          )}
+        </ThemeProvider>
+      </div>
     )
   }
 }
