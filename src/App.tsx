@@ -35,15 +35,17 @@ class App extends React.Component {
       return
     }
 
-    if (localStorage.getItem("pharmacies") !== null) {
-      this.setState({
-        loading: false
-      })
-      return
-    }
+    // if (localStorage.getItem("pharmacies") !== null) {
+    //   this.setState({
+    //     loading: false
+    //   })
+    //   return
+    // }
 
     axios
-      .get("https://us-central1-pharmacy-251220.cloudfunctions.net/getIstanbul")
+      .get(
+        "https://us-central1-pharmacy-251220.cloudfunctions.net/getPharmacies"
+      )
       .then(response => {
         localStorage.setItem("pharmacies", JSON.stringify(response.data.data))
       })
