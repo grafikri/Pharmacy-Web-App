@@ -1,7 +1,7 @@
 import React from "react"
 import logo from "./logo.svg"
 //import "./App.css"
-import axios from "axios"
+import axios, { AxiosError } from "axios"
 import { createMuiTheme, Typography, CircularProgress } from "@material-ui/core"
 import { ThemeProvider } from "@material-ui/styles"
 import { BrowserRouter as Router, Route } from "react-router-dom"
@@ -43,15 +43,13 @@ class App extends React.Component {
     // }
 
     axios
-      .get(
-        "https://us-central1-pharmacy-251220.cloudfunctions.net/getPharmacies"
-      )
+      .get(process.env.REACT_APP_API_URL!)
       .then(response => {
         localStorage.setItem("pharmacies", JSON.stringify(response.data.data))
       })
-      .catch(error => {
+      .catch((error: AxiosError) => {
         this.setState({
-          message: error
+          message: error.message
         })
       })
       .finally(() => {
